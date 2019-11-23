@@ -1,0 +1,27 @@
+{
+  "primaryColor":"#efc66e",
+  "secondaryColor":"#fff0d4",
+  "music":["dragonroost.ogg"],
+  "model":{
+    "model":"island2",
+    "pos":{
+      "x":0,
+      "y":-1,
+      "z":0
+    },
+    "rot":{
+      "x":0,
+      "y":-45,
+      "z":0
+    },
+    "scale":2,
+    "colors":[]
+  },
+  "completedLevels":{
+
+  },
+  "scripts":[
+    "island_bg"
+  ],
+  "unlock":"Unlock/island"
+}

@@ -1,0 +1,25 @@
+{
+  "primaryColor":"#68FF31",
+  "secondaryColor":"#FF905B",
+  "sound":["arctic_wind.wav"],
+  "model":{
+    "model":"kitchen",
+    "pos":{
+      "x":0,
+      "y":-1,
+      "z":0
+    },
+    "rot":{
+      "x":0,
+      "y":-45,
+      "z":0
+    },
+    "scale":2,
+    "colors":["#343434","#acacac","#00ff00","#ab451a","#33faff","#e0c27e","#b8977c","#22daff","#f0f0f0","#ffe37f","#0054ff","#ff0000","#ff6900","#fff800","#3fff00","#ff00ed"]
+  },
+  "completedLevels":{
+
+  },
+  "unlock":"Unlock/kitchen_4Unlock",
+  "completionScript":"Complete/kitchen_4"
+}

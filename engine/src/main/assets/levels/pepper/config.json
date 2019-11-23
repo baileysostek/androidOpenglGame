@@ -1,0 +1,29 @@
+{
+  "primaryColor":"#cc7700",
+  "secondaryColor":"#ff3300",
+  "sound":["arctic_wind.wav"],
+  "model":{
+    "model":"hell",
+    "pos":{
+      "x":0,
+      "y":2,
+      "z":-3
+    },
+    "rot":{
+      "x":0,
+      "y":-90,
+      "z":0
+    },
+    "scale":1.5,
+    "colors":[
+      "#42150F"
+    ]
+  },
+  "completedLevels":{
+
+  },
+  "scripts":[
+    "hell_bg"
+  ],
+  "unlock":"Unlock/hell"
+}

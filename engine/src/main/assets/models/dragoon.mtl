@@ -1,0 +1,50 @@
+# Blender MTL File: 'dragoon.blend'
+# Material Count: 4
+
+newmtl 36d87871_dds
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\36d87871.png
+map_d E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\36d87871.png
+
+newmtl 447e2020_dds
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\447e2020.png
+map_d E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\447e2020.png
+
+newmtl c3cc2288_dds
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\c3cc2288.png
+map_d E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\c3cc2288.png
+
+newmtl e760035b_dds
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\e760035b.png
+map_d E:\\Downloads\\_mmd_xps_models__air_ride_machines_download_by_sab64-daeobq7\\Air Rides\\textures\\dragoon\\e760035b.png

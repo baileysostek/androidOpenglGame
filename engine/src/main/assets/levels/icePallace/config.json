@@ -1,0 +1,40 @@
+{
+  "primaryColor":"#26ABB2",
+  "secondaryColor":"#4FF5FF",
+  "sound":["arctic_wind.wav"],
+  "model":{
+    "model":"icePallace",
+    "pos":{
+      "x":3,
+      "y":-1,
+      "z":0
+    },
+    "rot":{
+      "x":0,
+      "y":-15,
+      "z":0
+    },
+    "scale":4,
+    "colors":[
+      "#000834",
+      "#00aca3",
+      "#03510f",
+      "#021206",
+      "#342010",
+      "#b7e0d9",
+      "#b8977c",
+      "#22daff",
+      "#f0f0f0",
+      "#ffe37f",
+      "#0054ff",
+      "#ff0000",
+      "#ff6900",
+      "#fff800",
+      "#3fff00",
+      "#ff00ed"]
+  },
+  "completedLevels":{
+
+  },
+  "unlock":"Unlock/IceUnlock"
+}

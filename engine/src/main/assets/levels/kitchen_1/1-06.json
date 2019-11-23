@@ -1,0 +1,12 @@
+{
+  "name":"Back and Forth",
+  "width":9,
+  "height":5,
+  "entities":[
+    {"type":"Stone","x":6,"y":0},
+    {"type":"Mole","x":8,"y":0},
+    {"type":"Avocado","x":6,"y":1},
+    {"type":"Mole","x":0,"y":2},
+    {"type":"Mole","x":4,"y":4}],
+  "inventory":["Avocado","Avocado"]
+}

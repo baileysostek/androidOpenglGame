@@ -1,0 +1,25 @@
+{
+  "Name":"main",
+  "Version": "#version 100",
+  "Vertex":{
+    "Attributes": {
+      "vPosition": "vec4",
+      "vNormal": "vec3",
+      "vColor": "vec3"
+    },
+    "Uniforms": {
+      "transformation":"mat4",
+      "perspective":"mat4",
+      "view":"mat4",
+      "inverseCamera": "vec3"
+    },
+    "Varying": {
+
+    }
+  },
+  "Fragment":{
+    "Uniforms": {
+      "name": "type"
+    }
+  }
+}
