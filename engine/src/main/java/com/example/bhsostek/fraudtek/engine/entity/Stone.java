@@ -1,16 +1,24 @@
 package com.example.bhsostek.fraudtek.engine.entity;
 
+import com.example.bhsostek.fraudtek.engine.actions.Action;
 import com.example.bhsostek.fraudtek.engine.math.Vector3f;
 import com.example.bhsostek.fraudtek.engine.models.ModelManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Stone extends Entity{
+import java.util.LinkedList;
+
+public class Stone extends Entity implements WorldObject{
 
     public Stone() {
         super();
     }
+
+    private int worldX = 0;
+    private int worldY = 0;
+    private int startX = 0;
+    private int startY = 0;
 
     public Stone(JSONObject saveData) {
         super();
@@ -23,11 +31,19 @@ public class Stone extends Entity{
 
     @Override
     public void initialize(JSONObject object){
-//        try {
-//            this.setPosition((float) object.getDouble("x"), 0, (float) object.getDouble("y"));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            int x = object.getInt("x");
+            int y = object.getInt("y");
+
+            this.worldX = x;
+            this.startX = x;
+
+            this.worldY = y;
+            this.startY = y;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -36,5 +52,90 @@ public class Stone extends Entity{
 //        offset.setY(0.5f + (float)(0.25f * Math.sin(Math.toRadians(offsetTick))));
 //        offsetTick+=2f;
 //        offsetTick%=360f;
+    }
+
+    @Override
+    public int getFloorX() {
+        return worldX;
+    }
+
+    @Override
+    public int getFloorY() {
+        return worldY;
+    }
+
+    @Override
+    public void setFloorX(int x) {
+        this.worldX = x;
+    }
+
+    @Override
+    public void setFloorY(int y) {
+        this.worldY = y;
+    }
+
+    @Override
+    public int getStartX() {
+        return this.startX;
+    }
+
+    @Override
+    public int getStartY() {
+        return this.startY;
+    }
+
+    @Override
+    public void setStartX(int x) {
+        this.startX = x;
+    }
+
+    @Override
+    public void setStartY(int y) {
+        this.startY = y;
+    }
+
+    @Override
+    public void setIsSeethrough(boolean isSeethrough) {
+        return;
+    }
+
+    @Override
+    public boolean isSeethrough() {
+        return false;
+    }
+
+    @Override
+    public void isSatisfied(boolean isSatisfied) {
+        return;
+    }
+
+    @Override
+    public boolean isSatisfied() {
+        return true;
+    }
+
+    @Override
+    public void setActions(LinkedList<Action> actions) {
+
+    }
+
+    @Override
+    public void addAction(Action action) {
+
+    }
+
+    @Override
+    public LinkedList<Action> getActions() {
+        return null;
+    }
+
+    @Override
+    public void spliceAction(int index) {
+
+    }
+
+    @Override
+    public void performAction(Action action) {
+
     }
 }

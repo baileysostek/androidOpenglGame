@@ -29,6 +29,9 @@ public class EntityManager {
     private LinkedList<Entity> toRemove = new LinkedList<Entity>();
     private HashMap<EnumEntityType, LinkedList<Entity>> typedEntities = new HashMap<EnumEntityType, LinkedList<Entity>>();
 
+    //On remove see if a registered parent was removed, if it was, remove all children.
+    private HashMap<Entity, LinkedList<Entity>> links = new HashMap<>();
+
     //Lock for locking our entity set
     private Lock lock;
 
@@ -139,6 +142,9 @@ public class EntityManager {
                 case AVOCADO:{
                     return new Avocado(saveData);
                 }
+                case AVACADO:{
+                    return new Avocado(saveData);
+                }
                 case STONE:{
                     return new Stone(saveData);
                 }
@@ -183,9 +189,27 @@ public class EntityManager {
         }
     }
 
-    public void removeEntity(Entity toEat) {
-        if(this.entities.contains(toEat)) {
-            this.toRemove.add(toEat);
+    public void removeEntity(Entity toRemove) {
+        if(this.entities.contains(toRemove)) {
+            parentRemoveHelper(toRemove);
         }
+    }
+
+    private void parentRemoveHelper(Entity parent){
+        this.toRemove.add(parent);
+        if(this.links.containsKey(parent)){
+            LinkedList<Entity> links = this.links.get(parent);
+            for(Entity child : links){
+                parentRemoveHelper(child);
+            }
+            this.links.remove(links);
+        }
+    }
+
+    public void link(Entity parent, Entity child) {
+        if(!this.links.containsKey(parent)){
+            this.links.put(parent, new LinkedList<Entity>());
+        }
+        this.links.get(parent).push(child);
     }
 }

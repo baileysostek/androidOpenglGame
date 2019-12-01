@@ -11,6 +11,7 @@ public enum EnumEntityType {
     MOLE,
     HOLE,
     AVOCADO,
+    AVACADO,//TODO remove
     ONION,
     PEPPER,
     PIPE,

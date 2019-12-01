@@ -97,6 +97,26 @@ public class Avocado extends Entity implements WorldObject{
     }
 
     @Override
+    public void setIsSeethrough(boolean isSeethrough) {
+        return;
+    }
+
+    @Override
+    public boolean isSeethrough() {
+        return false;
+    }
+
+    @Override
+    public void isSatisfied(boolean isSatisfied) {
+        return;
+    }
+
+    @Override
+    public boolean isSatisfied() {
+        return true;
+    }
+
+    @Override
     public void setActions(LinkedList<Action> actions) {
 
     }

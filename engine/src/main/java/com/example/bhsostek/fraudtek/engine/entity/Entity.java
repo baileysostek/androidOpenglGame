@@ -8,6 +8,8 @@ import com.example.bhsostek.fraudtek.engine.math.MatrixUtils;
 
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+
 public class Entity{
 
     //Transform properties of an entity
@@ -84,6 +86,7 @@ public class Entity{
     }
 
     public void setParent(Entity parent){
+        EntityManager.getInstance().link(parent, this);
         this.parent = parent;
     }
 
