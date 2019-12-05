@@ -5,7 +5,8 @@
     "Attributes": {
       "vPosition": "vec4",
       "vNormal": "vec3",
-      "vColor": "vec3"
+      "vColor": "vec3",
+      "vTexture": "vec2"
     },
     "Uniforms": {
       "transformation":"mat4",

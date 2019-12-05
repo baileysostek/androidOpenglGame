@@ -19,6 +19,10 @@ public class Move extends Action{
         return this.yDir;
     }
 
+    public Move inverse(){
+        return new Move(this.xDir * -1, this.yDir * -1);
+    }
+
     public String toString(){
         return "{ x:"+ xDir +" , dy:"+yDir+" }";
     }

@@ -19,8 +19,9 @@ void main()
 //    vec2 normal = gl_FragCoord.xy / gl_FragCoord.w;
 //    gl_FragColor = vec4((sin(gl_FragCoord.x / 10.0) + 1.0) / 2.0, (sin(gl_FragCoord.y / 10.0) + 1.0) / 2.0, 1.0, 1.0);
 
-    gl_FragColor = vec4(dotProduct(passNormal, cameraDir) *passNormal, 1.0);
+//    gl_FragColor = vec4(dotProduct(passNormal, cameraDir) *passNormal, 1.0);
 
+      gl_FragColor = vec4(interpolated_color, 1.0);
 //    gl_FragColor = vec4(cameraDir, 1.0);
 
 }

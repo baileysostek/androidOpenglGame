@@ -62,7 +62,7 @@ public class Renderer implements GLSurfaceView.Renderer {
 //        Model onion = ModelManager.getInstance().loadModel("onion.obj");
 //        Model pepper = ModelManager.getInstance().loadModel("pepper.obj");
 //        Model mole = ModelManager.getInstance().loadModel("mole.obj");
-        Model sphere = ModelManager.getInstance().loadModel("sphere_smooth.obj");
+//        Model sphere = ModelManager.getInstance().loadModel("sphere_smooth.obj");
 //        EntityManager.getInstance().addEntity(new Entity().setModel(sphere).setPosition(0, 2, 0));
 
         //Load level

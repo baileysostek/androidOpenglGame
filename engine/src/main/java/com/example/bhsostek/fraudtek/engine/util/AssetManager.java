@@ -1,6 +1,7 @@
 package com.example.bhsostek.fraudtek.engine.util;
 
 import android.content.Context;
+import android.opengl.GLES20;
 
 import java.io.IOException;
 import java.io.InputStream;

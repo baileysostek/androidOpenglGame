@@ -332,6 +332,14 @@ public class GameManager {
         worldObjects[oldPos] = null;
     }
 
+    public void removeWorldObject(Entity object){
+        if(object instanceof WorldObject) {
+            WorldObject edible = ((WorldObject) object);
+            GameManager.getInstance().removeWorldObjectAtIndex(GameManager.getInstance().toGridCoords(edible.getFloorX(), edible.getFloorY()));
+            EntityManager.getInstance().removeEntity(object);
+        }
+    }
+
     //Interaction Callbacks
     public void onPress(MotionEvent motionEvent) {
         pressed = true;

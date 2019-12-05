@@ -26,7 +26,7 @@ public class Avocado extends Entity implements WorldObject{
 
     public Avocado(JSONObject saveData) {
         super();
-        this.setModel(ModelManager.getInstance().loadModel("avocado.obj"));
+        this.setModel(ModelManager.getInstance().loadModel("quad2.obj"));
 //        this.setScale(0.5f);
         this.setType(EnumEntityType.AVOCADO);
         initialize(saveData);

@@ -1,5 +1,8 @@
 package com.example.bhsostek.fraudtek.engine.models;
 
+import android.util.Log;
+
+import com.example.bhsostek.fraudtek.engine.math.Vector2f;
 import com.example.bhsostek.fraudtek.engine.math.Vector3f;
 import com.example.bhsostek.fraudtek.engine.renderer.EnumGLDatatype;
 import com.example.bhsostek.fraudtek.engine.renderer.Handshake;
@@ -36,7 +39,7 @@ public class ModelManager {
         String fileExtension = modelName.split("\\.")[1];
 
         //TODO replace with log manager call
-        System.out.println("Successfully loaded file: " + modelName + " File extension: " + fileExtension + " : Lines:" + lines.length);
+        Log.w("ModelManager", "Successfully loaded file: " + modelName + " File extension: " + fileExtension + " : Lines:" + lines.length);
 
         switch(fileExtension){
             case "obj":
@@ -55,22 +58,26 @@ public class ModelManager {
         LinkedList<Vector3f>  verteciesList = new LinkedList<>();
         LinkedList<Vector3f>  nomrmalsList  = new LinkedList<>();
         LinkedList<Vector3f>  facesList     = new LinkedList<>();
+        LinkedList<Vector2f>  textureVectors  = new LinkedList<>();
         LinkedList<Vector3f>  facesList_normal   = new LinkedList<>();
+        LinkedList<Vector2f>  facesList_texture  = new LinkedList<>();
 
         //Arrays of data
         Vector3f[] vertecies = null;
         Vector3f[] normals   = null;
+        Vector2f[] textures  = null;
 
         //Lists of raw floats to buffer into shader (VAO / Handshake)
         float[] vPositions = null;
         float[] vNormals   = null;
+        float[] vTextures  = null;
 
         int faceCount = 0;
 
         //Parse data from file
         for(String line : lines){
             //Loading vertices
-            if(line.startsWith("v ") || line.startsWith("vn ")){
+            if(line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("vt ")){
                 if(line.startsWith("v ")){
                     //vertex
                     line = line.replace("v ", "");
@@ -85,22 +92,36 @@ public class ModelManager {
                     Vector3f vector = new Vector3f(Float.parseFloat(components[0]), Float.parseFloat(components[1]), Float.parseFloat(components[2])).mul(1.0f);
                     nomrmalsList.addFirst(vector); // More memory efficient because we do not need to traverse the whole list to add a new element. Although, this LL interface may hold pointer to end of list.
                 }
+                if(line.startsWith("vt ")){
+                    //vertex
+                    line = line.replace("vt ", "");
+                    String[] components = line.split(" ");
+                    Vector2f vector = new Vector2f(Float.parseFloat(components[0]), Float.parseFloat(components[1])).mul(1.0f);
+                    textureVectors.addFirst(vector); // More memory efficient because we do not need to traverse the whole list to add a new element. Although, this LL interface may hold pointer to end of list.
+                }
             }else{
                 if(line.startsWith("f ")) {
                     faceCount++;
                     if (vertecies == null) {
-                        System.out.println("Vertecies have been loaded, Buffering to array:" + verteciesList.size());
+                        Log.w("ModelManager", "Vertecies have been loaded, Buffering to array:" + verteciesList.size());
                         vertecies = new Vector3f[verteciesList.size()];
                         int index = verteciesList.size() - 1;
                         for (Vector3f vec : verteciesList) {
                             vertecies[index] = vec;
                             index--;
                         }
-                        System.out.println("Normals have been loaded, Buffering to array:" + nomrmalsList.size());
+                        Log.w("ModelManager", "Normals have been loaded, Buffering to array:" + nomrmalsList.size());
                         normals = new Vector3f[nomrmalsList.size()];
                         index = nomrmalsList.size() - 1;
                         for (Vector3f vec : nomrmalsList) {
                             normals[index] = vec;
+                            index--;
+                        }
+                        Log.w("ModelManager", "Textures have been loaded, Buffering to array:" + textureVectors.size());
+                        textures = new Vector2f[textureVectors.size()];
+                        index = textureVectors.size() - 1;
+                        for (Vector2f vec : textureVectors) {
+                            textures[index] = vec;
                             index--;
                         }
                     }
@@ -114,10 +135,22 @@ public class ModelManager {
                 String[] components = line.split(" ");
                 for(String component : components){
                     String[] componentParts = component.split("/");
-                    int index        = Integer.parseInt(componentParts[0].trim()); //Index
-                    int normalVector = Integer.parseInt(componentParts[2].trim()); //Normal //TODO
+                    int index        = Integer.parseInt(componentParts[0].trim()); //Index   //Always
+                    int textureIndex = 1;
+                    if(!componentParts[1].trim().isEmpty()){
+                        textureIndex = Integer.parseInt(componentParts[1].trim()); //texture //Sometimes
+                    }
+                    int normalVector = Integer.parseInt(componentParts[2].trim()); //Normal  //Always
                     facesList.addLast(vertecies[index-1]);
                     facesList_normal.addLast(normals[normalVector-1]);
+
+                    //Textures
+                    if((textureIndex - 1) < textures.length) {
+                        Log.w("ModelManager", textures[textureIndex - 1].toString());
+                        facesList_texture.addLast(textures[textureIndex - 1]);
+                    }else{
+                        facesList_texture.addLast(new Vector2f(0));
+                    }
                 }
             }
         }
@@ -125,10 +158,16 @@ public class ModelManager {
         //Put our lists into buffers for this Model.
         vPositions = new float[facesList.size() * 3];
         vNormals   = new float[facesList.size() * 3];
+        vTextures  = new float[facesList.size() * 2];
         for(int i = 0; i < facesList.size(); i++){
             vPositions[(i * 3) + 0] = facesList.get(i).x();
             vPositions[(i * 3) + 1] = facesList.get(i).y();
             vPositions[(i * 3) + 2] = facesList.get(i).z();
+
+            vTextures[(i * 2) + 0] = facesList_texture.get(i).x();
+            vTextures[(i * 2) + 1] = facesList_texture.get(i).y();
+//            vTextures[(i * 2) + 0] = (float)Math.random();
+//            vTextures[(i * 2) + 1] = (float)Math.random();
 
             vNormals[(i * 3) + 0] = facesList_normal.get(i).x();
             vNormals[(i * 3) + 1] = facesList_normal.get(i).y();
@@ -139,6 +178,7 @@ public class ModelManager {
         modelHandshake.addAttributeList("vPosition", vPositions, EnumGLDatatype.VEC3);
         modelHandshake.addAttributeList("vColor", vNormals, EnumGLDatatype.VEC3);
         modelHandshake.addAttributeList("vNormal", vNormals, EnumGLDatatype.VEC3);
+        modelHandshake.addAttributeList("vTexture", vTextures, EnumGLDatatype.VEC2);
 
         System.out.println("AABB");
         for(Vector3f vec: getAABB(verteciesList)){

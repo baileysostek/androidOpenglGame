@@ -147,7 +147,7 @@ public class Mole extends Entity implements WorldObject{
 
                 //Only add to memory if not in memory.
                 if(!this.memory.containsKey(GameManager.getInstance().toGridCoords(this.floorX, this.floorY))){
-                    this.memory.put(GameManager.getInstance().toGridCoords(this.floorX, this.floorY), new Move(move.getxDir() * -1, move.getyDir() * -1));
+                    this.memory.put(GameManager.getInstance().toGridCoords(this.floorX, this.floorY), move.inverse());
                 }
 
                 this.getPosition().add(new Vector3f(move.getxDir() * 1f, 0, move.getyDir() * 1f));
@@ -171,6 +171,7 @@ public class Mole extends Entity implements WorldObject{
 
                         // Linked list contianing all other actors who would eat this ingredient.
                         LinkedList<Mole> otherEaters = new LinkedList<>();
+                        LinkedList<Mole> frameEaters = new LinkedList<>();
 
                         //Find all other moles who want to eat this
                         for(Entity e : EntityManager.getInstance().getEntitiesOfType(EnumEntityType.MOLE)){
@@ -185,6 +186,7 @@ public class Mole extends Entity implements WorldObject{
                                         Consume otherConsume = ((Consume)otherActorAction);
                                         System.out.println("To Eat chheck:"+toEat+" other "+otherConsume.getToEat());
                                         if(otherConsume.getToEat().equals(toEat)){ // This mole also wants this food
+                                            GameManager.getInstance().addToBlackList(mole);
                                             mole.getActions().clear(); //TODO if on this frame, all actors take a step back
                                             otherEaters.add(mole);
                                         }
@@ -200,6 +202,7 @@ public class Mole extends Entity implements WorldObject{
                                     if(((Consume)GameManager.getInstance().getFrameActions().get(entity)).getToEat() == toEat){
                                         ((Mole)entity).getActions().clear();
                                         otherEaters.add(((Mole)entity));
+                                        frameEaters.add(((Mole)entity));
                                     }
                                 }
                             }
@@ -228,9 +231,7 @@ public class Mole extends Entity implements WorldObject{
 
                         if(canEat) {
                             //Actual eating animation
-                            WorldObject edible = ((WorldObject) toEat);
-                            GameManager.getInstance().removeWorldObjectAtIndex(GameManager.getInstance().toGridCoords(edible.getFloorX(), edible.getFloorY()));
-                            EntityManager.getInstance().removeEntity(toEat);
+                            GameManager.getInstance().removeWorldObject(toEat);
                             this.holding = new Entity().setModel(toEat.getModel()).setScale(toEat.getScale());
                             this.holding.setParent(this);
                             this.holding.setPosition(0, 1.0f, 0);
@@ -255,11 +256,15 @@ public class Mole extends Entity implements WorldObject{
                                 this.getActions().addLast(move);
                             }
                         }else{
+                            //Remove world object
+                            GameManager.getInstance().removeWorldObject(toEat);
+
                             //Look through other eaters and move them all back one unit
-                            LinkedList<Mole> allEaters = new LinkedList<>(otherEaters);
+                            LinkedList<Mole> allEaters = new LinkedList<>(frameEaters);
                             allEaters.add(this);
                             for(Mole mole : allEaters){
-                                mole.addAction(mole.memory.get(GameManager.getInstance().toGridCoords(mole.getFloorX(), mole.getFloorY())));
+                                Move move = ((Move)mole.memory.get(GameManager.getInstance().toGridCoords(mole.getFloorX(), mole.getFloorY())));
+                                mole.addAction(move);
                             }
                         }
                     }

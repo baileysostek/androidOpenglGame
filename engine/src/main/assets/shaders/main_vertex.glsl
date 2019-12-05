@@ -2,6 +2,7 @@
 // Inputs
 attribute vec4 vPosition;
 attribute vec3 vNormal;
+attribute vec2 vTexture;
 
 //Uniform variables
 uniform mat4 transformation; // objects transform in space
@@ -22,7 +23,7 @@ void main(){
     passNormal = (vec3(offsetNormal) / offsetNormal.w) - (worldOffset.xyz)/worldOffset.w;
 
     //Output color
-    interpolated_color = vec3(1, 0, 0);
+    interpolated_color = vec3(vTexture.xy, 0);
 
     vec4 worldPosition = transformation * vec4(vPosition.x, vPosition.y, vPosition.z, 1.0);
 //    worldPosition.x += 1;
