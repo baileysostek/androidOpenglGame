@@ -1,25 +1,26 @@
 {
-  "primaryColor":"#68FF31",
-  "secondaryColor":"#FF905B",
-  "sound":["arctic_wind.wav"],
-  "model":{
-    "model":"kitchen",
-    "pos":{
-      "x":0,
-      "y":-1,
-      "z":0
-    },
-    "rot":{
-      "x":0,
-      "y":-45,
-      "z":0
-    },
-    "scale":2,
-    "colors":["#343434","#acacac","#0099ff","#ab451a","#33faff","#e0c27e","#b8977c","#22daff","#f0f0f0","#ffe37f","#0054ff","#ff0000","#ff6900","#fff800","#3fff00","#ff00ed"]
-  },
+  "levels": [
+    "6-01.json",
+    "6-02.json",
+    "6-03.json",
+    "6-04.json",
+    "6-05.json",
+    "6-06.json",
+    "6-07.json",
+    "6-08.json",
+    "6-09.json",
+    "6-10.json",
+    "6-11.json",
+    "6-12.json"
+  ],
   "completedLevels":{
 
   },
-  "unlock":"Unlock/kitchen_6Unlock",
-  "completionScript":"Complete/kitchen_6"
+  "resources": {
+    "models": [
+      "stone.obj",
+      "mole.obj",
+      "avocado.obj"
+    ]
+  }
 }

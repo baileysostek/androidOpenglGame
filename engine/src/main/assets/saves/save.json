@@ -1,0 +1,30 @@
+{
+  "AVOCADO": {
+    "icon": "avocado_icon.png",
+    "count": 13
+  },
+  "ONION": {
+    "icon": "onion_icon.png",
+    "count": 43
+  },
+  "PEPPER": {
+    "icon": "pepper_icon.png",
+    "count": 54
+  },
+  "LIME": {
+    "icon": "lime_icon.png",
+    "count": 12
+  },
+  "BEAN": {
+    "icon": "bean_icon.png",
+    "count": 64
+  },
+  "LEVELS": {
+    "icon": "level_icon.png",
+    "count": 43
+  },
+  "DEATHS": {
+    "icon": "death_icon.png",
+    "count": 65
+  }
+}

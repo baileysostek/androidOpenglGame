@@ -25,8 +25,14 @@ public class Vector2f {
 
     //Create normaized vec2
     public Vector2f(float[] vec4){
-        this.x = vec4[0] / vec4[3];
-        this.y = vec4[1] / vec4[3];
+        if(vec4.length == 2) {
+            this.x = vec4[0] ;
+            this.y = vec4[1] ;
+        }
+        if(vec4.length == 4) {
+            this.x = vec4[0] / vec4[3];
+            this.y = vec4[1] / vec4[3];
+        }
     }
 
     //Basic maths
@@ -54,6 +60,16 @@ public class Vector2f {
         return this;
     }
 
+    public Vector2f divX(float scale){
+        this.x /= scale;
+        return this;
+    }
+
+    public Vector2f divY(float scale){
+        this.y /= scale;
+        return this;
+    }
+
     public Vector2f mul(Vector2f copy){
         this.x *= copy.x;
         this.y *= copy.y;
@@ -62,6 +78,16 @@ public class Vector2f {
 
     public Vector2f mul(float scale){
         this.x *= scale;
+        this.y *= scale;
+        return this;
+    }
+
+    public Vector2f mulX(float scale){
+        this.x *= scale;
+        return this;
+    }
+
+    public Vector2f mulY(float scale){
         this.y *= scale;
         return this;
     }
@@ -118,5 +144,9 @@ public class Vector2f {
     @Override
     public String toString(){
         return "{x:" + VectorUtils.format(x) +", y:" + VectorUtils.format(y) +"}";
+    }
+
+    public float[] toArray() {
+        return new float[]{x, y};
     }
 }

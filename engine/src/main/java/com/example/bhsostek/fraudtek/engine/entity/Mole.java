@@ -1,11 +1,16 @@
 package com.example.bhsostek.fraudtek.engine.entity;
 
 import com.example.bhsostek.fraudtek.engine.actions.Action;
+import com.example.bhsostek.fraudtek.engine.actions.ActionManager;
 import com.example.bhsostek.fraudtek.engine.actions.Consume;
+import com.example.bhsostek.fraudtek.engine.actions.EnumDirection;
 import com.example.bhsostek.fraudtek.engine.actions.Move;
+import com.example.bhsostek.fraudtek.engine.animation.EnumLoop;
+import com.example.bhsostek.fraudtek.engine.animation.Timeline;
 import com.example.bhsostek.fraudtek.engine.game.GameManager;
 import com.example.bhsostek.fraudtek.engine.math.Vector3f;
 import com.example.bhsostek.fraudtek.engine.models.ModelManager;
+import com.example.bhsostek.fraudtek.engine.util.Callback;
 
 import org.json.JSONObject;
 
@@ -26,8 +31,18 @@ public class Mole extends Entity implements WorldObject{
     int startX = -1;
     int startY = -1;
 
+    //Max level width is 128
+    int closest = GameManager.getInstance().getMaxDistance();
+
     boolean isSeethrough = false;
     boolean isSatisfied  = false;
+    boolean animating    = false;
+    private EnumEntityType healdType = EnumEntityType.UNKNOWN;
+
+    //Used for movement lerping
+    private Timeline movement = new Timeline();
+    private Vector3f startPos = new Vector3f();
+    private Vector3f endPos   = new Vector3f();
 
     public Mole() {
         super();
@@ -36,16 +51,37 @@ public class Mole extends Entity implements WorldObject{
     public Mole(JSONObject saveData) {
         super();
         this.setModel(ModelManager.getInstance().loadModel("mole.obj"));
-        this.setScale(0.75f);
+        this.setScale(0.5f);
         this.setType(EnumEntityType.MOLE);
+        this.setTexture("mole.png");
         initialize(saveData);
     }
 
     @Override
     public void initialize(JSONObject object){
-//        MoleHole hole = new MoleHole();
-//        hole.setPosition(new Vector3f(this.getPosition()));
-//        EntityManager.getInstance().addEntity(hole);
+        movement.setDuration(GameManager.getInstance().getTimeScale());
+
+        movement.addCallback(0, new Callback() {
+            @Override
+            public Object callback(Object... objects) {
+                animating = true;
+                return null;
+            }
+        });
+
+        movement.addCallback(GameManager.getInstance().getTimeScale(), new Callback() {
+            @Override
+            public Object callback(Object... objects) {
+                animating = false;
+                return null;
+            }
+        });
+
+        movement.addKeyFrame("lerp", 0f, 0f);
+        movement.addKeyFrame("lerp", GameManager.getInstance().getTimeScale(), 1f);
+
+        movement.setLoop(EnumLoop.STOP_LAST_VALUE);
+
     }
 
     @Override
@@ -68,6 +104,13 @@ public class Mole extends Entity implements WorldObject{
         return this.isSatisfied;
     }
 
+    public int getClosest() {
+        return this.closest;
+    }
+
+    public void setClosest(int distance) {
+        this.closest = distance;
+    }
 
     @Override
     public int getFloorX() {
@@ -134,6 +177,19 @@ public class Mole extends Entity implements WorldObject{
     }
 
     @Override
+    public String toString(){
+        return "Type:"+super.getType()+"\n"+"Satisfied:"+this.isSatisfied+"\n"+"Seethrough:"+this.isSeethrough;
+    }
+
+    @Override
+    public void update(double delta){
+        if(movement.isRunning()) {
+            movement.update(delta);
+            this.setPosition(new Vector3f(startPos).add(new Vector3f(endPos).mul(movement.getValueOf("lerp"))));
+        }
+    }
+
+    @Override
     public void performAction(Action action) {
         switch (action.getType()){
             case MOVE:{
@@ -150,14 +206,16 @@ public class Mole extends Entity implements WorldObject{
                     this.memory.put(GameManager.getInstance().toGridCoords(this.floorX, this.floorY), move.inverse());
                 }
 
-                this.getPosition().add(new Vector3f(move.getxDir() * 1f, 0, move.getyDir() * 1f));
+                this.setLookAngle(ActionManager.getInstance().determineDirection(move));
+                startPos = new Vector3f(this.getPosition());
+                endPos = new Vector3f(new Vector3f(move.getxDir() * 1f, 0, move.getyDir() * 1f));
+                movement.start();
+
+//                this.getPosition().add(endPos);
 
                 //Check to see if we have consumed something and are home
                 if(holding != null) {
-                    if (this.floorX == startX && this.floorY == startY) {
-                        this.isSeethrough = true;
-                        this.isSatisfied  = true;
-                    }
+                    checkIsHome();
                 }
                 break;
             }
@@ -233,7 +291,9 @@ public class Mole extends Entity implements WorldObject{
                             //Actual eating animation
                             GameManager.getInstance().removeWorldObject(toEat);
                             this.holding = new Entity().setModel(toEat.getModel()).setScale(toEat.getScale());
+                            this.healdType = toEat.getType();
                             this.holding.setParent(this);
+                            this.holding.setTexture(toEat.getTextureID());
                             this.holding.setPosition(0, 1.0f, 0);
                             EntityManager.getInstance().addEntity(this.holding);
 
@@ -243,6 +303,12 @@ public class Mole extends Entity implements WorldObject{
                             int trackBackX = this.floorX;
                             int trackBackY = this.floorY;
                             int index = GameManager.getInstance().toGridCoords(trackBackX, trackBackY);
+
+                            //If we home, then break.
+                            if(checkIsHome()){
+                                break;
+                            }
+
                             while(this.memory.containsKey(index)){
                                 //If we have reached our starting tile, stop moving
                                 if(index == GameManager.getInstance().toGridCoords(this.getStartX(), this.getStartY())){
@@ -264,11 +330,75 @@ public class Mole extends Entity implements WorldObject{
                             allEaters.add(this);
                             for(Mole mole : allEaters){
                                 Move move = ((Move)mole.memory.get(GameManager.getInstance().toGridCoords(mole.getFloorX(), mole.getFloorY())));
-                                mole.addAction(move);
+                                mole.performAction(move);
                             }
                         }
                     }
                 }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onStep(Entity other) {
+        switch(other.getType()) {
+            case WATER: {
+                GameManager.getInstance().triggerFail();
+            }
+        }
+    }
+
+    @Override
+    public boolean isAnimating() {
+        return animating;
+    }
+
+    public boolean checkIsHome(){
+        if (this.floorX == startX && this.floorY == startY) {
+            System.out.println("I am home! With food too!");
+            this.isSeethrough = true;
+            this.isSatisfied  = true;
+            //Remove self
+            GameManager.getInstance().removeWorldObjectAtIndex(GameManager.getInstance().toGridCoords(this.floorX, this.floorY));
+            //If onion, plug up hole
+            switch(this.healdType){
+                case ONION:{
+                    OnionBlocker blocker = new OnionBlocker(null);
+                    blocker.setPosition(GameManager.getInstance().toWorldSpace(this.floorX, this.floorY));
+                    EntityManager.getInstance().addEntity(blocker);
+                    GameManager.getInstance().getWorldObjects()[GameManager.getInstance().toGridCoords(this.floorX, this.floorY)] = blocker;
+                    break;
+                }
+            }
+            //Move into hole
+            super.getPosition().add(new Vector3f(0, -1, 0));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Vector3f getWorldOffset() {
+        return new Vector3f(0);
+    }
+
+    public void setLookAngle(EnumDirection determineDirection) {
+        switch (determineDirection){
+            case UP:{
+                super.setRotation(0, 180, 0);
+                break;
+            }
+            case DOWN:{
+                super.setRotation(0, 0, 0);
+                break;
+            }
+            case LEFT:{
+                super.setRotation(0, 90, 0);
+                break;
+            }
+            case RIGHT:{
+                super.setRotation(0, 270, 0);
                 break;
             }
         }

@@ -25,7 +25,6 @@ public class OpenGLES20Activity extends Activity {
         //Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        System.out.println("Initialization");
         game = new Game(this);
         setContentView(game);
     }

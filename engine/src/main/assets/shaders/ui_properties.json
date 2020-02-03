@@ -1,0 +1,25 @@
+{
+  "Name":"main",
+  "Version": "#version 100",
+  "Vertex":{
+    "Attributes": {
+      "vPosition": "vec4",
+      "vTexture": "vec2"
+    },
+    "Uniforms": {
+      "transformation":"mat4",
+      "scale":"vec2",
+      "ar": "float",
+      "position": "vec2"
+    },
+    "Varying": {
+      "pass_texture_coords": "vec2"
+    }
+  },
+  "Fragment":{
+    "Uniforms": {
+      "textureID": "sampler2D",
+      "alpha": "float"
+    }
+  }
+}

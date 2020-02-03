@@ -13,8 +13,8 @@ public class CameraManager {
     private CameraManager(){
         this.activeCamera = new Camera();
 
-        this.activeCamera.setPosition(new Vector3f(0f, 5f, 0f));
-        this.activeCamera.setRotation(new Vector3f(-75f, 0f, 0f));
+        this.activeCamera.setPosition(new Vector3f(0f, 12f, 0f));
+        this.activeCamera.setRotation(new Vector3f(-66f, 0f, 0f));
 
         System.out.println("Forward: "+ activeCamera.getForwardDir());
     }

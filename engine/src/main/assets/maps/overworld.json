@@ -1,0 +1,22 @@
+{
+  "levels": [
+    {"name": "kitchen_1/1-01.json", "x": 0, "y": 0},
+    {"name": "kitchen_1/1-02.json", "x": 1, "y": 0},
+    {"name": "kitchen_1/1-03.json", "x": 2, "y": 0},
+    {"name": "kitchen_1/1-04.json", "x": 3, "y": 0},
+    {"name": "kitchen_1/1-05.json", "x": 0, "y": 1},
+    {"name": "kitchen_1/1-06.json", "x": 1, "y": 1},
+    {"name": "kitchen_1/1-07.json", "x": 2, "y": 1},
+    {"name": "kitchen_1/1-072.json","x" :3, "y": 1},
+    {"name": "kitchen_1/1-08.json", "x": 0, "y": 2},
+    {"name": "kitchen_1/1-09.json", "x": 1, "y": 2},
+    {"name": "kitchen_1/1-10.json", "x": 2, "y": 2},
+    {"name": "kitchen_1/1-11.json", "x": 3, "y": 2},
+    {"name": "kitchen_1/1-12.json", "x": 0, "y": 3},
+    {"name": "kitchen_1/1-13.json", "x": 1, "y": 3},
+    {"name": "kitchen_6/6-01.json", "x": 12, "y": 1}
+  ],
+  "links":[
+
+  ]
+}

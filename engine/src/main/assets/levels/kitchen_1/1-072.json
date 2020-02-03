@@ -1,0 +1,28 @@
+{
+  "name":"Zig-Zag 2",
+  "width":8,
+  "height":6,
+  "entities":[
+    {"type":"Mole","x":0,"y":5,"object":{"wants":["Avocado","Onion","Pepper"]}},
+    {"type":"Stone","x":5,"y":5,"object":{}},
+    {"type":"Stone","x":0,"y":3,"object":{}},
+    {"type":"Stone","x":7,"y":5,"object":{}},
+    {"type":"Mole","x":6,"y":5,"object":{"wants":["Avocado","Onion","Pepper"]}},
+    {"type":"Mole","x":7,"y":3,"object":{"wants":["Avocado","Onion","Pepper"]}},
+    {"type":"Avocado","x":3,"y":1,"object":{}},
+    {"type":"Mole","x":1,"y":0,"object":{"wants":["Avocado","Onion","Pepper"]}},
+    {"type":"Stone","x":4,"y":1,"object":{}},
+    {"type":"Stone","x":3,"y":0,"object":{}},
+    {"type":"Stone","x":2,"y":1,"object":{}},
+    {"type":"Mole","x":7,"y":0,"object":{"wants":["Avocado","Onion","Pepper"]}},
+    {"type":"Stone","x":7,"y":1,"object":{}},
+    {"type":"Stone","x":6,"y":1,"object":{}},
+    {"type":"Stone","x":3,"y":3,"object":{}}
+  ],
+  "inventory":[
+    "Avocado",
+    "Avocado",
+    "Avocado",
+    "Avocado"
+  ]
+}

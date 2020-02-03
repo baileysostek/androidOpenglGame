@@ -20,7 +20,7 @@
   },
   "Fragment":{
     "Uniforms": {
-      "name": "type"
+      "textureID": "sampler2D"
     }
   }
 }

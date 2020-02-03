@@ -5,6 +5,7 @@ import android.opengl.Matrix;
 import com.example.bhsostek.fraudtek.engine.math.Vector3f;
 import com.example.bhsostek.fraudtek.engine.models.Model;
 import com.example.bhsostek.fraudtek.engine.math.MatrixUtils;
+import com.example.bhsostek.fraudtek.engine.renderer.SpriteManager;
 
 import org.json.JSONObject;
 
@@ -25,6 +26,9 @@ public class Entity{
     private Entity parent = null;
 
     private EnumEntityType type = EnumEntityType.UNKNOWN;
+
+    //Texture ID to use when rendering
+    private int textureID = -1;
 
     //Needed for Guac
     private boolean isSeethrough = false;
@@ -156,6 +160,18 @@ public class Entity{
 
     protected float getScale() {
         return this.scale;
+    }
+
+    public int getTextureID(){
+        return this.textureID;
+    }
+
+    public void setTexture(int id){
+        this.textureID = id;
+    }
+
+    public void setTexture(String texture){
+        this.textureID = SpriteManager.getInstance().loadTexture(texture);
     }
 
     protected Vector3f getRotation() {

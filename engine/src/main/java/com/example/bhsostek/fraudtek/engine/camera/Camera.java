@@ -3,6 +3,7 @@ package com.example.bhsostek.fraudtek.engine.camera;
 import android.opengl.Matrix;
 
 import com.example.bhsostek.fraudtek.engine.math.MatrixUtils;
+import com.example.bhsostek.fraudtek.engine.math.Vector2f;
 import com.example.bhsostek.fraudtek.engine.math.Vector3f;
 
 public class Camera {
@@ -55,6 +56,10 @@ public class Camera {
         return this.pos;
     }
 
+    public Vector2f getPosition2D() {
+        return new Vector2f(this.pos.x(), this.pos.y());
+    }
+
     public Vector3f getRotation() {
         return this.rot;
     }
@@ -67,5 +72,17 @@ public class Camera {
         Matrix.rotateM(modelMatrix, 0,  rot.x(), 1f,0f, 0f);
 
         return modelMatrix;
+    }
+
+    public float getX() {
+        return this.pos.x();
+    }
+
+    public float getY(){
+        return this.pos.y();
+    }
+
+    public void setPosition(Vector2f pos) {
+        this.setPosition(new Vector3f(pos.x(), pos.y(), 0));
     }
 }

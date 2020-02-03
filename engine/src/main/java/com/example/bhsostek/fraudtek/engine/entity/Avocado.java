@@ -22,12 +22,15 @@ public class Avocado extends Entity implements WorldObject{
 
     public Avocado() {
         super();
+        this.setTexture("avocado.png");
+        this.setType(EnumEntityType.AVOCADO);
     }
 
     public Avocado(JSONObject saveData) {
         super();
-        this.setModel(ModelManager.getInstance().loadModel("quad2.obj"));
-//        this.setScale(0.5f);
+        this.setModel(ModelManager.getInstance().loadModel("avocado.obj"));
+        this.setTexture("avocado.png");
+//        this.setScale(0.3f);
         this.setType(EnumEntityType.AVOCADO);
         initialize(saveData);
     }
@@ -36,6 +39,7 @@ public class Avocado extends Entity implements WorldObject{
     public void update(double delta){
         this.rotate(0, 1f, 0);
         offset.setY(0.5f + (float)(0.25f * Math.sin(Math.toRadians(offsetTick))));
+//        offset.setZ(0.5f + (float)(0.25f * Math.sin(Math.toRadians(offsetTick))));
         offsetTick+=2f;
         offsetTick%=360f;
     }
@@ -70,6 +74,11 @@ public class Avocado extends Entity implements WorldObject{
     @Override
     public void setFloorY(int y) {
         this.worldY = y;
+    }
+
+    @Override
+    public Vector3f getWorldOffset() {
+        return new Vector3f();
     }
 
     @Override
@@ -139,5 +148,15 @@ public class Avocado extends Entity implements WorldObject{
     @Override
     public void performAction(Action action) {
 
+    }
+
+    @Override
+    public void onStep(Entity other) {
+
+    }
+
+    @Override
+    public boolean isAnimating() {
+        return false;
     }
 }

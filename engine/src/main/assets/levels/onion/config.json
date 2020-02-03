@@ -1,24 +1,17 @@
 {
-  "primaryColor":"#678f56",
-  "secondaryColor":"#8a634b",
-  "sound":["arctic_wind.wav"],
-  "model":{
-    "model":"garden",
-    "pos":{
-      "x":0,
-      "y":-2.5,
-      "z":0
-    },
-    "rot":{
-      "x":0,
-      "y":0,
-      "z":0
-    },
-    "scale":2,
-    "colors":[]
-  },
+  "levels": [
+    "1-01.json",
+    "1-02.json",
+    "1-06.json"
+  ],
   "completedLevels":{
 
   },
-  "unlock":"Unlock/garden"
+  "resources": {
+    "models": [
+      "stone.obj",
+      "mole.obj",
+      "avocado.obj"
+    ]
+  }
 }

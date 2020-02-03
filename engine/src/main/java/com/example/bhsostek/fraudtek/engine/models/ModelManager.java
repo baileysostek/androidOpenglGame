@@ -1,11 +1,17 @@
 package com.example.bhsostek.fraudtek.engine.models;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.example.bhsostek.fraudtek.engine.math.Vector2f;
 import com.example.bhsostek.fraudtek.engine.math.Vector3f;
 import com.example.bhsostek.fraudtek.engine.renderer.EnumGLDatatype;
 import com.example.bhsostek.fraudtek.engine.renderer.Handshake;
+import com.example.bhsostek.fraudtek.engine.renderer.SpriteManager;
 import com.example.bhsostek.fraudtek.engine.util.AssetManager;
 
 import java.util.HashMap;
@@ -39,7 +45,7 @@ public class ModelManager {
         String fileExtension = modelName.split("\\.")[1];
 
         //TODO replace with log manager call
-        Log.w("ModelManager", "Successfully loaded file: " + modelName + " File extension: " + fileExtension + " : Lines:" + lines.length);
+        System.out.println("Successfully loaded file: " + modelName + " File extension: " + fileExtension + " : Lines:" + lines.length);
 
         switch(fileExtension){
             case "obj":
@@ -51,7 +57,6 @@ public class ModelManager {
                 return null;
         }
     }
-
 
     private Model parseOBJ(int id, String[] lines){
         //Buffer lists
@@ -74,8 +79,67 @@ public class ModelManager {
 
         int faceCount = 0;
 
+        // for .mtl files
+        boolean hasTexture = false;
+        Vector2f overrideCoords = new Vector2f(0);
+        String mtllib = "";
+        int matScale = 0;
+        String faceMaterial = "";
+
+        HashMap<String, Vector3f> materials = new HashMap<>();
+        HashMap<String, Vector2f> materialLocations = new HashMap<>();
+
         //Parse data from file
         for(String line : lines){
+            //Loading material library
+            if(line.startsWith("mtllib ")){
+                mtllib = line.replace("mtllib ", "");
+                //Now that we have found a material file, lets look up that file and read in all of the materials
+                System.out.println("Looking for lib:"+"models/"+mtllib.trim());
+                String[] matFile = AssetManager.getInstance().readFile("models/" + mtllib.trim()).split("\n");
+                String currentMaterial = "";
+                for(String matLine : matFile){
+                    if(matLine.startsWith("newmtl ")){
+                        currentMaterial = matLine.replace("newmtl ", "");
+                    }
+                    //Get diffuse color
+                    if(currentMaterial != null && matLine.startsWith("Kd ")){
+                        String[] colorComponents = matLine.replace("Kd ", "").split(" ");
+                        Vector3f color = new Vector3f(Float.parseFloat(colorComponents[0]), Float.parseFloat(colorComponents[1]), Float.parseFloat(colorComponents[2])).mul(255.0f);
+                        materials.put(currentMaterial, color);
+                    }
+                }
+                matScale = (int) Math.ceil(Math.sqrt(materials.size()));
+                {
+                    int i = 0;
+                    for (String mat : materials.keySet()) {
+                        float xPos = (i % (float) matScale) / (float) matScale;
+                        float yPos = (float) Math.floor(i / (float) matScale) / (float) matScale;
+                        materialLocations.put(mat, new Vector2f(xPos, yPos));
+                        System.out.println("Location:" + new Vector2f(xPos, yPos));
+                        i++;
+                    }
+                }
+                //Check to see if this models image exists, if not create it here
+//                String bitmapFileName = mtllib.trim().replace(".mtl", ".png");
+//                Bitmap bmp = AssetManager.getInstance().readImage(bitmapFileName);
+//                if(bmp == null){
+//                    int[] colors = new int[matScale * matScale];
+//                    for(int i = 0; i < colors.length; i++){
+//                        colors[i] = 0;
+//                    }
+//                    bmp = Bitmap.createBitmap(colors, matScale, matScale, Bitmap.Config.ARGB_8888);
+//                    int i = 0;
+//                    for (String mat : materials.keySet()) {
+//                        int xPos = (int) Math.floor(i % (float) matScale);
+//                        int yPos = (int) Math.floor(i / (float) matScale);
+//                        Vector3f color = materials.get(mat);
+//                        bmp.setPixel(xPos, yPos, Color.argb(1, color.x(), color.y(), color.z()));
+//                        i++;
+//                    }
+//                    SpriteManager.getInstance().putTexture(bitmapFileName, bmp);
+//                }
+            }
             //Loading vertices
             if(line.startsWith("v ") || line.startsWith("vn ") || line.startsWith("vt ")){
                 if(line.startsWith("v ")){
@@ -93,31 +157,39 @@ public class ModelManager {
                     nomrmalsList.addFirst(vector); // More memory efficient because we do not need to traverse the whole list to add a new element. Although, this LL interface may hold pointer to end of list.
                 }
                 if(line.startsWith("vt ")){
+                    hasTexture = true;
                     //vertex
                     line = line.replace("vt ", "");
                     String[] components = line.split(" ");
-                    Vector2f vector = new Vector2f(Float.parseFloat(components[0]), Float.parseFloat(components[1])).mul(1.0f);
+                    Vector2f vector = new Vector2f(Float.parseFloat(components[0]), Float.parseFloat(components[1])).mul(new Vector2f(1, -1));
                     textureVectors.addFirst(vector); // More memory efficient because we do not need to traverse the whole list to add a new element. Although, this LL interface may hold pointer to end of list.
                 }
             }else{
+                if(line.startsWith("usemtl ") && !hasTexture){
+                    //Force our Texture coords to be different
+                    String materialName = line.replace("usemtl ", "");
+                    faceMaterial = materialName;
+                    System.out.println("Setting color to:" + materials.get(materialName));
+
+                }
                 if(line.startsWith("f ")) {
                     faceCount++;
                     if (vertecies == null) {
-                        Log.w("ModelManager", "Vertecies have been loaded, Buffering to array:" + verteciesList.size());
+                        System.out.println("Vertecies have been loaded, Buffering to array:" + verteciesList.size());
                         vertecies = new Vector3f[verteciesList.size()];
                         int index = verteciesList.size() - 1;
                         for (Vector3f vec : verteciesList) {
                             vertecies[index] = vec;
                             index--;
                         }
-                        Log.w("ModelManager", "Normals have been loaded, Buffering to array:" + nomrmalsList.size());
+                        System.out.println("Normals have been loaded, Buffering to array:" + nomrmalsList.size());
                         normals = new Vector3f[nomrmalsList.size()];
                         index = nomrmalsList.size() - 1;
                         for (Vector3f vec : nomrmalsList) {
                             normals[index] = vec;
                             index--;
                         }
-                        Log.w("ModelManager", "Textures have been loaded, Buffering to array:" + textureVectors.size());
+                        System.out.println("Textures have been loaded, Buffering to array:" + textureVectors.size());
                         textures = new Vector2f[textureVectors.size()];
                         index = textureVectors.size() - 1;
                         for (Vector2f vec : textureVectors) {
@@ -135,21 +207,44 @@ public class ModelManager {
                 String[] components = line.split(" ");
                 for(String component : components){
                     String[] componentParts = component.split("/");
-                    int index        = Integer.parseInt(componentParts[0].trim()); //Index   //Always
-                    int textureIndex = 1;
-                    if(!componentParts[1].trim().isEmpty()){
-                        textureIndex = Integer.parseInt(componentParts[1].trim()); //texture //Sometimes
-                    }
-                    int normalVector = Integer.parseInt(componentParts[2].trim()); //Normal  //Always
-                    facesList.addLast(vertecies[index-1]);
-                    facesList_normal.addLast(normals[normalVector-1]);
+                    if(componentParts.length == 3) {
+                        int index = Integer.parseInt(componentParts[0].trim()); //Index   //Always
+                        int textureIndex = 1;
+                        if (!componentParts[1].trim().isEmpty()) {
+                            textureIndex = Integer.parseInt(componentParts[1].trim()); //texture //Sometimes
+                        }
+                        int normalVector = Integer.parseInt(componentParts[2].trim()); //Normal  //Always
+                        facesList.addLast(vertecies[index - 1]);
+                        facesList_normal.addLast(normals[normalVector - 1]);
 
-                    //Textures
-                    if((textureIndex - 1) < textures.length) {
-                        Log.w("ModelManager", textures[textureIndex - 1].toString());
-                        facesList_texture.addLast(textures[textureIndex - 1]);
-                    }else{
-                        facesList_texture.addLast(new Vector2f(0));
+                        //Textures
+                        if ((textureIndex - 1) < textures.length) {
+                            facesList_texture.addLast(textures[textureIndex - 1]);
+                        } else {
+                            //We dont have a texture but we do have material channels
+                            facesList_texture.addLast(materialLocations.get(faceMaterial));
+                            System.out.println("Using override texture index:" + materialLocations.get(faceMaterial));
+                        }
+                    }else if(componentParts.length == 2){
+                        component = component.replaceAll("/", "//");
+                        componentParts = component.split("/");
+                        int index = Integer.parseInt(componentParts[0].trim()); //Index   //Always
+                        int textureIndex = 1;
+                        if (!componentParts[1].trim().isEmpty()) {
+                            textureIndex = Integer.parseInt(componentParts[1].trim()); //texture //Sometimes
+                        }
+                        int normalVector = Integer.parseInt(componentParts[2].trim()); //Normal  //Always
+                        facesList.addLast(vertecies[index - 1]);
+                        facesList_normal.addLast(normals[normalVector - 1]);
+
+                        //Textures
+                        if ((textureIndex - 1) < textures.length) {
+                            facesList_texture.addLast(textures[textureIndex - 1]);
+                        } else {
+                            //We dont have a texture but we do have material channels
+                            facesList_texture.addLast(materialLocations.get(faceMaterial));
+                            System.out.println("Using override texture index:" + materialLocations.get(faceMaterial));
+                        }
                     }
                 }
             }
@@ -159,6 +254,7 @@ public class ModelManager {
         vPositions = new float[facesList.size() * 3];
         vNormals   = new float[facesList.size() * 3];
         vTextures  = new float[facesList.size() * 2];
+
         for(int i = 0; i < facesList.size(); i++){
             vPositions[(i * 3) + 0] = facesList.get(i).x();
             vPositions[(i * 3) + 1] = facesList.get(i).y();

@@ -13,10 +13,14 @@ import com.example.bhsostek.fraudtek.engine.camera.CameraManager;
 import com.example.bhsostek.fraudtek.engine.entity.EntityManager;
 import com.example.bhsostek.fraudtek.engine.entity.EnumEntityType;
 import com.example.bhsostek.fraudtek.engine.game.GameManager;
+import com.example.bhsostek.fraudtek.engine.math.Vector2f;
 import com.example.bhsostek.fraudtek.engine.math.Vector3f;
 import com.example.bhsostek.fraudtek.engine.models.ModelManager;
 import com.example.bhsostek.fraudtek.engine.renderer.ScreenUtils;
 import com.example.bhsostek.fraudtek.engine.renderer.ShaderManager;
+import com.example.bhsostek.fraudtek.engine.renderer.ui.UI;
+import com.example.bhsostek.fraudtek.engine.renderer.ui.UIManager;
+import com.example.bhsostek.fraudtek.engine.scene.SceneManager;
 import com.example.bhsostek.fraudtek.engine.util.AssetManager;
 
 public class Game extends GLSurfaceView {
@@ -52,22 +56,21 @@ public class Game extends GLSurfaceView {
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()){
-                    case (MotionEvent.ACTION_DOWN):{
-                        GameManager.getInstance().onPress(motionEvent);
-                        break;
-                    }
-                    case (MotionEvent.ACTION_MOVE):{
-                        GameManager.getInstance().onMove(motionEvent);
-                        break;
-                    }
-                    case (MotionEvent.ACTION_UP):{
-                        GameManager.getInstance().onRelease(motionEvent);
-                        break;
-                    }
+            switch (motionEvent.getAction()){
+                case (MotionEvent.ACTION_DOWN):{
+                    SceneManager.getInstance().onPress(motionEvent);
+                    break;
                 }
-
-                return true;
+                case (MotionEvent.ACTION_MOVE):{
+                    SceneManager.getInstance().onMove(motionEvent);
+                    break;
+                }
+                case (MotionEvent.ACTION_UP):{
+                    SceneManager.getInstance().onRelease(motionEvent);
+                    break;
+                }
+            }
+            return true;
             }
         });
 

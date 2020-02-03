@@ -45,7 +45,12 @@ public class EntityManager {
     }
 
     public void addEntity(Entity entity){
-        this.toAdd.add(entity);
+        lock.lock();
+        try {
+            this.toAdd.add(entity);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public void clearEntities(){
@@ -109,7 +114,7 @@ public class EntityManager {
                 Vector3f mutablePos = new Vector3f(pos);
                 Vector3f mutableDir = new Vector3f(dir);
                 Vector2f hit = new Vector2f();
-                boolean hitCheck = Intersectionf.intersectRayAab(mutablePos.x(), mutablePos.y(), mutablePos.z(), mutableDir.x(), mutableDir.y(), mutableDir.z(), aabb[0].x(), aabb[0].y(), aabb[0].z(), aabb[1].x(), aabb[1].y(), aabb[1].z(), hit);
+                boolean hitCheck = Intersectionf.intersectRayAab(mutablePos.x(), mutablePos.y(), mutablePos.z(), mutableDir.x(), mutableDir.y(), mutableDir.z(), aabb[0].x(), aabb[0].y() - 1, aabb[0].z(), aabb[1].x(), aabb[1].y() - 1, aabb[1].z(), hit);
                 if(hitCheck){
                     hits.push(e);
                 }
@@ -135,26 +140,7 @@ public class EntityManager {
     public Entity createEntityFromRegistry(JSONObject saveData) {
         try {
             EnumEntityType type = EnumEntityType.valueOf(saveData.getString("type").toUpperCase());
-            switch (type){
-                case MOLE:{
-                    return new Mole(saveData);
-                }
-                case AVOCADO:{
-                    return new Avocado(saveData);
-                }
-                case AVACADO:{
-                    return new Avocado(saveData);
-                }
-                case STONE:{
-                    return new Stone(saveData);
-                }
-                case ICE:{
-                    return new Ice(saveData);
-                }
-                default:{
-                    System.out.println("Undefined case for type:" + type);
-                }
-            }
+            return generateEntityOfType(type, saveData);
         }catch (IllegalArgumentException e) {
             try {
                 System.out.println("Unknown entity type:" + saveData.getString("type"));
@@ -163,6 +149,37 @@ public class EntityManager {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Entity generateEntityOfType(EnumEntityType type, JSONObject saveData){
+        switch (type){
+            case MOLE:{
+                return new Mole(saveData);
+            }
+            case AVOCADO:{
+                return new Avocado(saveData);
+            }
+            case AVACADO:{
+                return new Avocado(saveData);
+            }
+            case ONION:{
+                return new Onion(saveData);
+            }
+            case STONE:{
+                return new Stone(saveData);
+            }
+            case ICE:{
+                return new Ice(saveData);
+            }
+            case WATER:{
+                return new Water(saveData);
+            }
+            default:{
+                System.out.println("Undefined case for type:" + type);
+//                System.exit(1);
+            }
         }
         return null;
     }
@@ -190,8 +207,13 @@ public class EntityManager {
     }
 
     public void removeEntity(Entity toRemove) {
-        if(this.entities.contains(toRemove)) {
-            parentRemoveHelper(toRemove);
+        lock.lock();
+        try {
+            if(this.entities.contains(toRemove)) {
+                parentRemoveHelper(toRemove);
+            }
+        } finally {
+            lock.unlock();
         }
     }
 

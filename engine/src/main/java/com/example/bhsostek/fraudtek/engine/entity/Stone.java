@@ -26,6 +26,7 @@ public class Stone extends Entity implements WorldObject{
         this.setScale(0.75f);
         this.rotate(0, (float) (360.0f * Math.random()), 0);
         this.setType(EnumEntityType.STONE);
+        this.setTexture("stone.png");
         initialize(saveData);
     }
 
@@ -72,6 +73,11 @@ public class Stone extends Entity implements WorldObject{
     @Override
     public void setFloorY(int y) {
         this.worldY = y;
+    }
+
+    @Override
+    public Vector3f getWorldOffset() {
+        return new Vector3f(0, -0.75f, 0);
     }
 
     @Override
@@ -137,5 +143,15 @@ public class Stone extends Entity implements WorldObject{
     @Override
     public void performAction(Action action) {
 
+    }
+
+    @Override
+    public void onStep(Entity other) {
+
+    }
+
+    @Override
+    public boolean isAnimating() {
+        return false;
     }
 }

@@ -13,6 +13,7 @@ public enum EnumEntityType {
     AVOCADO,
     AVACADO,//TODO remove
     ONION,
+    ONION_BLOCKER,
     PEPPER,
     PIPE,
     WATER,

@@ -30,9 +30,14 @@ public class Shader {
         //convert string datatype to datatype
         EnumGLDatatype type = EnumGLDatatype.valueOf(datatype.toUpperCase());
         if(type != null){//if there is a type it means that this uniform was bound correctly
+            System.out.println("Adding uniform:"+name+" of type:"+type);
             uniforms.put(name, type);
         }else{
             System.err.println("No datatype like " + datatype + " for uniform " + name + " could be found.");
         }
+    }
+
+    public int getProgramID(){
+        return this.programID;
     }
 }

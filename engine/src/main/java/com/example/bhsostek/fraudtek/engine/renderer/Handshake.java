@@ -13,13 +13,15 @@ import java.util.HashMap;
 public class Handshake {
 
     //Stored attributes
-    private HashMap<String, Buffer> bufferedAttributes = new HashMap<>();
+    private HashMap<String, Buffer> bufferedAttributes    = new HashMap<>();
+    private HashMap<String, EnumGLDatatype> bufferedSizes = new HashMap<>();
 
     public Handshake(){
     }
 
     public void addAttributeList(String name, float[] data, EnumGLDatatype datatype){
         bufferedAttributes.put(name, BufferUtils.bufferData(data, datatype));
+        bufferedSizes.put(name, datatype);
     }
 
     public Buffer getAttribute(String attribute) {
@@ -29,5 +31,9 @@ public class Handshake {
 
     public boolean hasAttribute(String attribute) {
         return this.bufferedAttributes.containsKey(attribute);
+    }
+
+    public int getAttributeSize(String attribute) {
+        return bufferedSizes.get(attribute).sizePerVertex;
     }
 }

@@ -28,6 +28,12 @@ public class ShaderManager {
     }
 
     public int loadShader(String name){
+
+        //If it exists
+        if(shaders.containsKey(name)){
+            return shaders.get(name).getProgramID();
+        }
+
         //Look at the assets we have available to us, and load a shaders source files
         String info     = AssetManager.getInstance().readFile("shaders/" + name + "_properties.json");
         String vertex   = AssetManager.getInstance().readFile("shaders/" + name + "_vertex.glsl");
@@ -113,6 +119,7 @@ public class ShaderManager {
 
             //IN's are attributes that need to be bound to the current context.
             JSONObject vertexData = shaderMeta.getJSONObject("Vertex");
+            JSONObject fragmentData = shaderMeta.getJSONObject("Fragment");
             JSONArray attributesJSON = vertexData.getJSONObject("Attributes").names();
             String[] attributes = new String[attributesJSON.length()];
             for(int i = 0; i < attributesJSON.length(); i++){
@@ -129,6 +136,13 @@ public class ShaderManager {
             for(int i = 0; i < uniformsJSON.length(); i++){
                 String uniformName = uniformsJSON.getString(i);
                 String uniformType = vertexData.getJSONObject("Uniforms").getString(uniformName);
+                shader.addUniform(uniformName, uniformType);
+                System.out.println("Adding uniform named: " + uniformName + " type:" + uniformType);
+            }
+            uniformsJSON = fragmentData.getJSONObject("Uniforms").names();
+            for(int i = 0; i < uniformsJSON.length(); i++){
+                String uniformName = uniformsJSON.getString(i);
+                String uniformType = fragmentData.getJSONObject("Uniforms").getString(uniformName);
                 shader.addUniform(uniformName, uniformType);
                 System.out.println("Adding uniform named: " + uniformName + " type:" + uniformType);
             }
@@ -174,7 +188,7 @@ public class ShaderManager {
                     System.err.println("This handshake does not contain the attribute: " + attribute);
                 }
 
-                GLES20.glVertexAttribPointer(attribPointer, 3, GLES20.GL_FLOAT, true, 0, handshake.getAttribute(attribute));
+                GLES20.glVertexAttribPointer(attribPointer, handshake.getAttributeSize(attribute), GLES20.GL_FLOAT, true, 0, handshake.getAttribute(attribute));
             }
             //Cleanup stuff | This redirects the pointer for the active attribute array to null.
             GLES20.glEnableVertexAttribArray(0);

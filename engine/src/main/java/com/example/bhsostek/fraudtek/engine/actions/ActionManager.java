@@ -45,6 +45,29 @@ public class ActionManager{
         return out;
     }
 
+    public EnumDirection determineDirection(int x, int y, int xx, int yy){
+        LinkedList<Action> out = new LinkedList<>();
+        //Determine if this is an X delta or a Y delta
+        EnumDirection dir = null;
+        if(x == xx){
+            if(y < yy){
+                dir = EnumDirection.DOWN;
+            }else{
+                dir = EnumDirection.UP;
+            }
+        }
+        if(y == yy){
+            if(x < xx){
+                dir = EnumDirection.RIGHT;
+            }else{
+                dir = EnumDirection.LEFT;
+            }
+        }
+        return dir;
+    }
+
+
+
 
     public static void initialize() {
         if(actionManager == null){
@@ -58,5 +81,21 @@ public class ActionManager{
 
     public void onShutdown() {
 
+    }
+
+    public EnumDirection determineDirection(Move move) {
+        if(move.getxDir() != 0 && move.getxDir() < 0){
+            return EnumDirection.LEFT;
+        }
+        if(move.getxDir() != 0 && move.getxDir() > 0){
+            return EnumDirection.RIGHT;
+        }
+        if(move.getyDir() != 0 && move.getyDir() < 0){
+            return EnumDirection.UP;
+        }
+        if(move.getyDir() != 0 && move.getyDir() > 0){
+            return EnumDirection.DOWN;
+        }
+        return null;
     }
 }

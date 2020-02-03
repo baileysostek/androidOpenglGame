@@ -8,20 +8,22 @@ varying vec3 passNormal;
 varying vec3 cameraDir;
 varying vec3 interpolated_color;
 
+uniform sampler2D texureID;
 
 
 float dotProduct(vec3 posI, vec3 posJ){
     return (posI.x * posJ.x) + (posI.y * posJ.y) + (posI.z * posJ.z);
 }
 
-void main()
-{
+void main(){
 //    vec2 normal = gl_FragCoord.xy / gl_FragCoord.w;
 //    gl_FragColor = vec4((sin(gl_FragCoord.x / 10.0) + 1.0) / 2.0, (sin(gl_FragCoord.y / 10.0) + 1.0) / 2.0, 1.0, 1.0);
 
 //    gl_FragColor = vec4(dotProduct(passNormal, cameraDir) *passNormal, 1.0);
 
-      gl_FragColor = vec4(interpolated_color, 1.0);
+//    gl_FragColor = vec4(passNormal, 1.0); //Surface Normal
+//    gl_FragColor = vec4(interpolated_color, 1.0); //Texture Index
+    gl_FragColor = texture2D(texureID, vec2(interpolated_color)); //Texture Image
 //    gl_FragColor = vec4(cameraDir, 1.0);
 
 }

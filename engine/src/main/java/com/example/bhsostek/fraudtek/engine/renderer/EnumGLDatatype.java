@@ -8,6 +8,8 @@ public enum EnumGLDatatype {
     VEC3 (Float.BYTES, 3 ),
     VEC4 (Float.BYTES, 4 ),
 
+    SAMPLER2D(Integer.BYTES, 1 ),
+
     //Matrix
     MAT3(Float.BYTES, 9 ),
     MAT4(Float.BYTES, 16),

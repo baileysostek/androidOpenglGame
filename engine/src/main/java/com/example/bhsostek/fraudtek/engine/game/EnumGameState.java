@@ -8,9 +8,12 @@ public enum  EnumGameState {
     WIN(),
     LOSE(),
 
-    //In overworld
+    //In overworld (REfactor to scenes)
     LOADING(),
     MENU(),
     LEVEL_SELECT(),
+
+    PLAY(),
+    EDIT(),
 
 }
